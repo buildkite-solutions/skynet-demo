@@ -1,0 +1,17 @@
+steps:
+  - label: "Failure analysis"
+    command: |
+      curl -X POST "$BUILDKITE_AGENT_ENDPOINT/ai/anthropic/v1/messages" \
+        -H "Content-Type: application/json" \
+        -H "x-api-key: $BUILDKITE_AGENT_ACCESS_TOKEN" \
+        -d '{
+          "model": "claude-sonnet-4-5",
+          "max_tokens": 1000,
+          "system": "You are an expert software engineer. Analyze build and test failures, identify root causes, and suggest fixes.",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Analyze the test failures in this log"
+            }
+          ]
+        }'
