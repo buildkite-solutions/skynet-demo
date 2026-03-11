@@ -10,12 +10,15 @@ cat test-output.txt
 echo 'Do we even gotta jq?'
 jq --version
 
-FILE_ID=$(curl -s -X POST "$BUILDKITE_AGENT_ENDPOINT/ai/anthropic/v1/files" \
+FILE_ID_JSON=$(curl -s -X POST "$BUILDKITE_AGENT_ENDPOINT/ai/anthropic/v1/files" \
   -H "x-api-key: $BUILDKITE_AGENT_ACCESS_TOKEN" \
   -H "anthropic-version: 2023-06-01" \
   -H "anthropic-beta: files-api-2025-04-14" \
-  -F "file=@test-output.txt;type=text/plain" \
-  | jq -r '.id')
+  -F "file=@test-output.txt;type=text/plain")
+
+echo "FILE_ID_FULL_JSON IS: $FILE_ID_JSON"
+
+FILE_ID=$(echo $FILE_ID_JSON | jq -r '.id')
 
 echo "FILE_ID: $FILE_ID"
 
