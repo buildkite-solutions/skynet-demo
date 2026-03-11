@@ -10,7 +10,7 @@ cat test-output.txt
 echo 'Do we even gotta jq?'
 jq --version
 
-ATHRO_KEY=$(buildkite-agent get secret ANTHROPIC_API_KEY)
+ATHRO_KEY=$(buildkite-agent secret get ANTHROPIC_API_KEY)
 
 FILE_ID_JSON=$(curl -s -X POST "https://api.anthropic.com/v1/files" \
   -H "x-api-key: $ATHRO_KEY" \
