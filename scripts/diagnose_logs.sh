@@ -4,11 +4,16 @@ set -euo pipefail
 buildkite-agent artifact download test-output.log . --step "run-tests"
 cp test-output.log test-output.txt
 
+echo 'TEST OUTPUT CONFIRMATION:'
+cat test-output.txt
+
 FILE_ID=$(curl -s -X POST "$BUILDKITE_AGENT_ENDPOINT/ai/anthropic/v1/files" \
   -H "x-api-key: $BUILDKITE_AGENT_ACCESS_TOKEN" \
   -H "anthropic-beta: files-api-2025-04-14" \
   -F "file=@test-output.txt;type=text/plain" \
   | jq -r '.id')
+
+echo "FILE_ID: $FILE_ID"
 
 curl -X POST "$BUILDKITE_AGENT_ENDPOINT/ai/anthropic/v1/messages" \
   -H "x-api-key: $BUILDKITE_AGENT_ACCESS_TOKEN" \
