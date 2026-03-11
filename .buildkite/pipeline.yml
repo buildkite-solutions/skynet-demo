@@ -1,21 +1,7 @@
 steps:
   - label: ":test_tube: Run tests"
     key: "run-tests"
-    command: |
-      {
-        echo "Running test suite..."
-        echo ""
-        echo "FAIL: test_user_authentication (0.23s)"
-        echo "  AssertionError: expected status 200 but got 401"
-        echo "  at authenticate (src/auth.js:42)"
-        echo ""
-        echo "FAIL: test_database_connection (30.01s)"
-        echo "  TimeoutError: Connection timeout after 30s"
-        echo "  at connect (src/db.js:15)"
-        echo ""
-        echo "2 failed, 8 passed"
-        exit 1
-      } 2>&1 | tee test-output.log
+    command: "scripts/run_tests.sh"
     artifact_paths: "test-output.log"
 
   - label: ":robot_face: Failure analysis"
