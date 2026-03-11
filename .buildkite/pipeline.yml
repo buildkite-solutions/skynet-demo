@@ -13,4 +13,4 @@ steps:
     command: "scripts/run_tests.sh"
     artifact_paths: "test-output.log"
     plugins:
-      - buildkite-solutions/skynet#latest: ~
+      - buildkite-solutions/skynet#v0.1.0: ~
