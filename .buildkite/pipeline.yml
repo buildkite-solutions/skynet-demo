@@ -29,7 +29,7 @@ steps:
         -H "Content-Type: application/json" \
         -H "x-api-key: $$BUILDKITE_AGENT_ACCESS_TOKEN" \
         -d "$(jq -n \
-          --rawfile log test-output.log \
+          --arg log "$(cat test-output.log)" \
           '{
             "model": "claude-sonnet-4-5",
             "max_tokens": 1000,
