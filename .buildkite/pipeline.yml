@@ -1,8 +1,6 @@
 steps:
   - label: ":test_tube: Run tests"
     key: "run-tests"
-    soft_fail:
-      - exit_status: 1
     command: |
       {
         echo "Running test suite..."
@@ -22,4 +20,5 @@ steps:
 
   - label: ":robot_face: Failure analysis"
     depends_on: "run-tests"
+    allow_dependency_failure: true
     command: "scripts/diagnose_logs.sh"
