@@ -10,8 +10,10 @@ cat test-output.txt
 echo 'Do we even gotta jq?'
 jq --version
 
-FILE_ID_JSON=$(curl -s -X POST "$BUILDKITE_AGENT_ENDPOINT/ai/anthropic/v1/files" \
-  -H "x-api-key: $BUILDKITE_AGENT_ACCESS_TOKEN" \
+ATHRO_KEY=$(buildkite-agent get secret ANTHROPIC_API_KEY)
+
+FILE_ID_JSON=$(curl -s -X POST "https://api.anthropic.com/v1/files" \
+  -H "x-api-key: $ATHRO_KEY" \
   -H "anthropic-version: 2023-06-01" \
   -H "anthropic-beta: files-api-2025-04-14" \
   -F "file=@test-output.txt;type=text/plain")
