@@ -46,7 +46,7 @@ steps:
                 "role": "user",
                 "content": [
                   {"type": "text", "text": "Analyze the test failures in this log:"},
-                  {"type": "document", "source": {"type": "file", "file_id": $file_id}}
+                  {"type": "document", "source": {"type": "file", "file_id": $$file_id}}
                 ]
               }
             ]
