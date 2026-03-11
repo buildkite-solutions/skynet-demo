@@ -9,6 +9,7 @@ cat test-output.txt
 
 FILE_ID=$(curl -s -X POST "$BUILDKITE_AGENT_ENDPOINT/ai/anthropic/v1/files" \
   -H "x-api-key: $BUILDKITE_AGENT_ACCESS_TOKEN" \
+  -H "anthropic-version: 2023-06-01" \
   -H "anthropic-beta: files-api-2025-04-14" \
   -F "file=@test-output.txt;type=text/plain" \
   | jq -r '.id')
