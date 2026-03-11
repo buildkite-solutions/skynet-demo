@@ -1,6 +1,15 @@
 steps:
+  - input: ":mag: Diagnose a specific failure? (optional)"
+    key: "collect-failure-input"
+    fields:
+      - text: "Failure log to diagnose"
+        key: "failure-log"
+        hint: "Paste a test failure log here to diagnose it. Leave blank to run random mock tests."
+        required: false
+
   - label: ":test_tube: Run tests"
     key: "run-tests"
+    depends_on: "collect-failure-input"
     command: "scripts/run_tests.sh"
     artifact_paths: "test-output.log"
 

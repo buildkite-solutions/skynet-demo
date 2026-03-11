@@ -252,8 +252,21 @@ fixture_data_validation() {
 }
 
 # ---------------------------------------------------------------------------
-# Main: pick a fixture at random and run it, piping output to the log file.
+# Main: if a failure log was supplied (via $1 or Buildkite metadata), use it
+# directly for diagnosis; otherwise pick a fixture at random.
 # ---------------------------------------------------------------------------
+
+FAILURE_INPUT="${1:-}"
+
+if [[ -z "$FAILURE_INPUT" ]] && command -v buildkite-agent &>/dev/null; then
+  FAILURE_INPUT=$(buildkite-agent meta-data get failure-log --default "" 2>/dev/null || true)
+fi
+
+if [[ -n "$FAILURE_INPUT" ]]; then
+  echo "--- Using provided failure log for diagnosis"
+  echo "$FAILURE_INPUT" | tee test-output.log
+  exit 1
+fi
 
 FIXTURES=(
   fixture_auth_jwt
