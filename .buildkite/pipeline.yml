@@ -1,17 +1,43 @@
 steps:
-  - label: "Failure analysis"
+  - label: ":test_tube: Run tests"
+    key: "run-tests"
+    soft_fail:
+      - exit_status: 1
     command: |
+      {
+        echo "Running test suite..."
+        echo ""
+        echo "FAIL: test_user_authentication (0.23s)"
+        echo "  AssertionError: expected status 200 but got 401"
+        echo "  at authenticate (src/auth.js:42)"
+        echo ""
+        echo "FAIL: test_database_connection (30.01s)"
+        echo "  TimeoutError: Connection timeout after 30s"
+        echo "  at connect (src/db.js:15)"
+        echo ""
+        echo "2 failed, 8 passed"
+        exit 1
+      } 2>&1 | tee test-output.log
+    artifact_paths: "test-output.log"
+
+  - label: ":robot_face: Failure analysis"
+    depends_on: "run-tests"
+    command: |
+      buildkite-agent artifact download test-output.log . --step "run-tests"
+
       curl -X POST "$BUILDKITE_AGENT_ENDPOINT/ai/anthropic/v1/messages" \
         -H "Content-Type: application/json" \
         -H "x-api-key: $$BUILDKITE_AGENT_ACCESS_TOKEN" \
-        -d '{
-          "model": "claude-sonnet-4-5",
-          "max_tokens": 1000,
-          "system": "You are an expert software engineer. Analyze build and test failures, identify root causes, and suggest fixes.",
-          "messages": [
-            {
-              "role": "user",
-              "content": "Analyze the test failures in this log"
-            }
-          ]
-        }'
+        -d "$(jq -n \
+          --rawfile log test-output.log \
+          '{
+            "model": "claude-sonnet-4-5",
+            "max_tokens": 1000,
+            "system": "You are an expert software engineer. Analyze build and test failures, identify root causes, and suggest fixes.",
+            "messages": [
+              {
+                "role": "user",
+                "content": ("Analyze the test failures in this log:\n\n" + $log)
+              }
+            ]
+          }')"
