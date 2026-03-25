@@ -7,7 +7,7 @@ cp test-output.log test-output.txt
 echo 'TEST OUTPUT CONFIRMATION:'
 cat test-output.txt
 
-LOG_CONTENT=$(cat test-output.txt)
+LOG_CONTENT=$(egrep -iC20 "error|fail" test-output.txt)
 
 RESPONSE=$(curl -s -f -X POST "$BUILDKITE_AGENT_ENDPOINT/ai/anthropic/v1/messages" \
   -H "x-api-key: $BUILDKITE_AGENT_ACCESS_TOKEN" \
